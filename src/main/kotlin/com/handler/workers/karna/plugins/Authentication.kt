@@ -32,7 +32,7 @@ fun Application.authenticate(userService: UserService) {
 
             challenge { _, _ ->
                 val response: Response<Nothing> =
-                    Response(HttpStatusCode.Unauthorized.value, message = "UnAuthorized", error = "UnAuthorized error")
+                    Response(HttpStatusCode.Unauthorized.value, message = "UnAuthorized", error = "UnAuthorized")
                 call.respond(response)
             }
         }
