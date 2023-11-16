@@ -1,4 +1,4 @@
-package com.handler.workers.karna.plugins
+package com.handler.workers.karna.utils
 
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*

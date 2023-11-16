@@ -1,5 +1,7 @@
+import com.auth0.jwt.interfaces.Payload
 import com.handler.workers.karna.JwtConfig
 import com.handler.workers.karna.service.UserService
+import com.handler.workers.karna.utils.Constants
 import com.handler.workers.karna.utils.Response
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -19,10 +21,10 @@ fun Application.authenticate(userService: UserService) {
             validate { credential ->
                 try {
                     val id = credential.payload.getClaim("id").asString()
-                        ?: throw Throwable("Invalid token: Missing or empty 'id' claim")
+                        ?: throw Throwable(Constants.Messages.INVALID_TOKEN_OR_TOKEN_EXPIRED)
 
                     val user = userService.findUserById(id)
-                        ?: throw Throwable("User not found for ID: $id")
+                        ?: throw Throwable(Constants.Messages.INVALID_TOKEN_OR_TOKEN_EXPIRED)
 
                     JWTPrincipal(credential.payload)
                 } catch (e: Exception) {
@@ -32,7 +34,10 @@ fun Application.authenticate(userService: UserService) {
 
             challenge { _, _ ->
                 val response: Response<Nothing> =
-                    Response(HttpStatusCode.Unauthorized.value, message = "UnAuthorized", error = "UnAuthorized")
+                    Response(
+                        HttpStatusCode.Unauthorized.value,
+                        message = Constants.Messages.INVALID_TOKEN_OR_TOKEN_EXPIRED
+                    )
                 call.respond(response)
             }
         }

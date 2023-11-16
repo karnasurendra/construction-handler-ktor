@@ -1,7 +1,7 @@
 package com.handler.workers.karna
 
 import authenticate
-import com.handler.workers.karna.plugins.configureSerialization
+import com.handler.workers.karna.utils.configureSerialization
 import com.handler.workers.karna.plugins.configureUserRouting
 import com.handler.workers.karna.service.UserServiceImpl
 import io.ktor.server.application.*

@@ -21,12 +21,11 @@ object JwtConfig {
     /**
      * Produce a token for this combination of User and Account
      */
-    fun makeToken(user: User): String {
-        val userIdString = user.id?.toString() ?: throw IllegalArgumentException("User ID is null")
+    fun makeToken(userId: String): String {
         return JWT.create()
             .withSubject("Authentication")
             .withIssuer(issuer)
-            .withClaim("id", userIdString)
+            .withClaim("id", userId)
             .withExpiresAt(getExpiration())
             .sign(algorithm)
     }

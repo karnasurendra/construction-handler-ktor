@@ -6,7 +6,7 @@ import org.litote.kmongo.Id
 data class User(
     @BsonId
     val id: Id<User>? = null,
-    val phoneNumber: String,
+    val phoneNumber: Long,
     val mPin: String,
     val name: String
 )
