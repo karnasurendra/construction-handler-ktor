@@ -11,8 +11,8 @@ object HashUtils {
         return digest.joinToString("") { "%02x".format(it) }
     }
 
-    fun verifyHash(hasValue: String, hashedPIN: String): Boolean {
-        return sha256(hasValue) == hashedPIN
+    fun verifyHash(hashedPIN: String, valueToHash: String): Boolean {
+        return sha256(valueToHash) == hashedPIN
     }
 
 }

@@ -6,14 +6,19 @@ import com.handler.workers.karna.utils.HashUtils
 fun User.toDto(): CreateUser = CreateUser(
     id = this.id.toString(),
     name = this.name,
-    mPin = this.mPin,
+    pin = this.pin,
     phoneNumber = this.phoneNumber
 )
 
 fun CreateUser.toUser(): User =
     User(
         name = this.name,
-//        mPin = this.mPin,
-        mPin = HashUtils.sha256(this.mPin),
+        pin = HashUtils.sha256(this.pin),
+        phoneNumber = this.phoneNumber
+    )
+
+fun User.toReturnUserInfo():ReturnUserInfo =
+    ReturnUserInfo(
+        name = this.name,
         phoneNumber = this.phoneNumber
     )

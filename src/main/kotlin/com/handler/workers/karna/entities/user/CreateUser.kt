@@ -6,6 +6,6 @@ import kotlinx.serialization.Serializable
 data class CreateUser(
     val id: String? = null,
     val phoneNumber: Long,
-    val mPin: String,
+    val pin: String,
     val name: String = String()
 )

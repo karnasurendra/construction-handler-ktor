@@ -35,6 +35,7 @@ dependencies {
     implementation("io.ktor:ktor-server-auth-jwt")
     implementation("io.ktor:ktor-http")
     implementation("io.ktor:ktor-network-tls:2.1.3")
+    implementation("io.ktor:ktor-server-auth-jwt-jvm:$ktor_version")
 
     testImplementation("io.ktor:ktor-server-tests-jvm")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")

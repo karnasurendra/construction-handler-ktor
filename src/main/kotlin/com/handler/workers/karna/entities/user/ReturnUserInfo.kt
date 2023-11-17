@@ -1,12 +1,10 @@
 package com.handler.workers.karna.entities.user
 
-import org.bson.codecs.pojo.annotations.BsonId
+import kotlinx.serialization.Serializable
 import org.litote.kmongo.Id
 
-data class User(
-    @BsonId
-    val id: Id<User>? = null,
+@Serializable
+data class ReturnUserInfo(
     val phoneNumber: Long,
-    val pin: String,
     val name: String
 )

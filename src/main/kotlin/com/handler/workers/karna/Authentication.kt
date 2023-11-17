@@ -1,5 +1,5 @@
-import com.auth0.jwt.interfaces.Payload
 import com.handler.workers.karna.JwtConfig
+import com.handler.workers.karna.entities.user.User
 import com.handler.workers.karna.service.UserService
 import com.handler.workers.karna.utils.Constants
 import com.handler.workers.karna.utils.Response
@@ -22,11 +22,9 @@ fun Application.authenticate(userService: UserService) {
                 try {
                     val id = credential.payload.getClaim("id").asString()
                         ?: throw Throwable(Constants.Messages.INVALID_TOKEN_OR_TOKEN_EXPIRED)
-
                     val user = userService.findUserById(id)
                         ?: throw Throwable(Constants.Messages.INVALID_TOKEN_OR_TOKEN_EXPIRED)
-
-                    JWTPrincipal(credential.payload)
+                    CustomPrincipal(user)
                 } catch (e: Exception) {
                     null
                 }
@@ -43,6 +41,8 @@ fun Application.authenticate(userService: UserService) {
         }
     }
 }
+
+data class CustomPrincipal(val user: User) : Principal
 
 
 

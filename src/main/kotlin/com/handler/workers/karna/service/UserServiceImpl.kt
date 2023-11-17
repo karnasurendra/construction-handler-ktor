@@ -26,21 +26,17 @@ class UserServiceImpl : UserService {
         return userCollection.findOne(User::id eq bsonId)
     }
 
+    override fun findUserByNumber(phoneNumber: Long): User? {
+        return userCollection.findOne(User::phoneNumber eq phoneNumber)
+    }
+
     override fun findUserByNumberAndMPin(phoneNumber: Long, mPin: String): User? {
-        println("Checking findUserByNumberAndMPin == --- $mPin ==  $phoneNumber")
-        return try {
-            val user = userCollection.findOne(User::phoneNumber eq phoneNumber)
-            println("Checking findUserByNumberAndMPin from  DB --- $user")
-            return if (user != null && HashUtils.verifyHash(user.mPin, mPin)) {
-                user
-            } else {
-                null
-            }
-        } catch (e: Exception) {
-            println("Checking findUserByNumberAndMPin Exception ---  ${e.localizedMessage}")
+        val user = userCollection.findOne(User::phoneNumber eq phoneNumber)
+        return if (user != null && HashUtils.verifyHash(user.pin, mPin)) {
+            user
+        } else {
             null
         }
-
     }
 
     override fun release() {

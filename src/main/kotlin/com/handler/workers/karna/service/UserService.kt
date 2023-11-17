@@ -8,6 +8,7 @@ interface UserService {
     fun create(user: User): User
 
     fun findUserById(id: String): User?
+    fun findUserByNumber(phoneNumber: Long): User?
 
     fun findAll(): List<User>
 

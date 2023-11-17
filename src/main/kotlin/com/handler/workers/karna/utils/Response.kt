@@ -6,6 +6,5 @@ import kotlinx.serialization.Serializable
 data class Response<T>(
     val statusCode: Int,
     val message: String,
-    var data: T? = null,
-    var error: String? = null
+    var data: T? = null
 )
