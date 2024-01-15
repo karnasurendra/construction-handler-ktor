@@ -1,5 +1,9 @@
 package com.handler.workers.karna.utils
 
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+
 class Constants {
 
     object Messages {
@@ -14,15 +18,6 @@ class Constants {
         const val INVALID_CREDENTIALS = "Invalid credentials"
     }
 
-    object ValidationMessages {
-        const val SUCCESS = "Success"
-        const val VALIDATION_SUCCESS = "Validation success"
-        const val INVALID_PHONE = "Invalid Phone number"
-        const val INVALID_PIN = "Invalid Pin"
-        const val INVALID_NAME = "Invalid Name"
-        const val FAILED_TO_FETCH_USER_INFO = "Failed to fetch user info"
-    }
-
     object DBConstants {
         const val DB_NAME = "constructionDb"
         const val USER_COLLECTION = "user"
@@ -35,6 +30,12 @@ class Constants {
         const val USER_CREATE = "create"
         const val USER_INFO = "info"
         const val USER_LOGIN = "login"
+        const val WORKERS_BASE = "api/workers"
+        const val ADD_WORKER = "add"
+        const val GET_WORKERS_LIST = "list"
+        const val GET_SINGLE_WORKER_INFO = "info"
+        const val DELETE_WORKER = "delete"
     }
+
 
 }

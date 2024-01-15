@@ -13,5 +13,11 @@ data class User(
     val mobileNumber: String,
     val pin: PasswordEncryptionResult,
     val securitySettings: SecuritySettings,
-    val created: LocalDateTime = LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS)
+    val created: LocalDateTime = LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS),
+    val experienceInYears: Int,
+    val expertiseIn: List<ConstructionExpertise>
 )
+
+enum class ConstructionExpertise {
+    MASON, FLOORING_INSTALLER, TILE_INSTALLER, ELECTRICIAN, PAINTER
+}

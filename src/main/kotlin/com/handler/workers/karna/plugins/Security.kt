@@ -1,6 +1,6 @@
 package com.handler.workers.karna.plugins
 
-import com.handler.workers.karna.application.UserService
+import com.handler.workers.karna.services.UserService
 import com.handler.workers.karna.domain.User
 import com.handler.workers.karna.security.JWTConfig
 import com.handler.workers.karna.utils.ApiResult

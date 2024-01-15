@@ -1,12 +1,10 @@
 package com.handler.workers.karna.api
 
-import com.handler.workers.karna.application.UserService
-import com.handler.workers.karna.configuration.ApplicationConfiguration
+import com.handler.workers.karna.services.UserService
 import com.handler.workers.karna.plugins.CustomPrincipal
 import com.handler.workers.karna.plugins.SuccessResponseModel
 import com.handler.workers.karna.plugins.TokenResponse
 import com.handler.workers.karna.plugins.handleFailureResponse
-import com.handler.workers.karna.security.EncryptionManager
 import com.handler.workers.karna.utils.ApiResult
 import com.handler.workers.karna.utils.Constants
 import com.handler.workers.karna.utils.ErrorCode
@@ -16,7 +14,6 @@ import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.encodeToJsonElement
 import java.time.ZoneOffset
@@ -69,7 +66,9 @@ class UserControllerImpl(
                         UserOverviewDto(
                             user.username,
                             user.mobileNumber,
-                            user.created.toInstant(ZoneOffset.UTC).toEpochMilli()
+                            user.created.toInstant(ZoneOffset.UTC).toEpochMilli(),
+                            user.experienceInYears,
+                            user.expertiseIn
                         )
                     ) as JsonObject
                 )

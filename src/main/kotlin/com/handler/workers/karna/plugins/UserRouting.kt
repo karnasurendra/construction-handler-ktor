@@ -24,7 +24,6 @@ fun Routing.configureUserRouting() {
         authenticate {
 
             get(Constants.ApiNames.USER_INFO) {
-                println("+++++++++++++++++++++++++")
                 userController.getUserInfo(call)
             }
 

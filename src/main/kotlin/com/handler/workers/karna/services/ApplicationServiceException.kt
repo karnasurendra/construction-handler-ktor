@@ -1,7 +1,6 @@
-package com.handler.workers.karna.application
+package com.handler.workers.karna.services
 
 import com.handler.workers.karna.utils.ErrorCode
-import io.ktor.http.*
 
 open class GeneralException(
     val errorCode: ErrorCode,

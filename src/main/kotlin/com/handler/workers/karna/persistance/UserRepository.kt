@@ -9,7 +9,6 @@ import org.litote.kmongo.eq
 interface UserRepository {
     suspend fun findBy(mobileNumber: String): User?
     suspend fun save(user: User): String?
-
     suspend fun findUserById(id: String): User?
 }
 

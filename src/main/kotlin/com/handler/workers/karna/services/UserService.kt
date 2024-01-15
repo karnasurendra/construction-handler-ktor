@@ -1,8 +1,7 @@
-package com.handler.workers.karna.application
+package com.handler.workers.karna.services
 
 import com.handler.workers.karna.api.UserDto
 import com.handler.workers.karna.api.UserLoginDto
-import com.handler.workers.karna.domain.SecuritySettings
 import com.handler.workers.karna.domain.User
 import com.handler.workers.karna.domain.defaultSecurityFileSettings
 import com.handler.workers.karna.persistance.UserRepository
@@ -47,7 +46,9 @@ class UserServiceImpl(
                         username = userDto.userName,
                         mobileNumber = userDto.mobileNumber,
                         pin = EncryptionManager.encryptString(userDto.pin),
-                        securitySettings = defaultSecurityFileSettings()
+                        securitySettings = defaultSecurityFileSettings(),
+                        experienceInYears = userDto.experience,
+                        expertiseIn = userDto.expertiseIn
                     )
                 )
                 return if (userId != null) {
@@ -88,7 +89,7 @@ class UserServiceImpl(
 
             val existingUser = userRepository.findBy(userLoginDto.mobileNumber)
                 ?: throw ApplicationServiceException(
-                    ErrorCode.INPUT_VALIDATION_FAILED
+                    ErrorCode.INPUT_VALIDATION_FAILED,
                     "No user found with ${userLoginDto.mobileNumber}"
                 )
 
