@@ -4,22 +4,11 @@ import io.ktor.server.application.*
 
 
 object ApplicationConfiguration {
-    lateinit var databaseConfig: DatabaseConfig
     lateinit var securityConfig: SecurityConfig
     lateinit var jwtConfig: JwtConfig
 }
 
 fun Application.setupApplicationConfiguration() {
-
-    val databaseObject = environment.config.config("ktor.database")
-    val url = databaseObject.property("url").getString()
-    val user = databaseObject.property("user").getString()
-    val password = databaseObject.property("password").getString()
-    ApplicationConfiguration.databaseConfig = DatabaseConfig(
-        url = url,
-        user = user,
-        password = password
-    )
 
     // Security
     val securityObject = environment.config.config("ktor.security")
@@ -38,8 +27,6 @@ fun Application.setupApplicationConfiguration() {
         defaultIterationCount = defaultIterationCount,
         defaultGcmParameterSpecLength = defaultGcmParameterSpecLength
     )
-
-    println(ApplicationConfiguration.databaseConfig)
 
     // Jwt
     val jwtObject = environment.config.config("ktor.jwt")
@@ -60,10 +47,4 @@ data class SecurityConfig(
 data class JwtConfig(
     val jwtSecret: String,
     val issuer: String
-)
-
-data class DatabaseConfig(
-    val url: String,
-    val user: String,
-    val password: String
 )

@@ -20,9 +20,6 @@ class Constants {
 
     object DBConstants {
         const val DB_NAME = "constructionDb"
-        const val USER_COLLECTION = "user"
-        const val PROJECT_COLLECTION = "project"
-        const val PROJECT_OWNER_COLLECTION = "project_owner"
     }
 
     object ApiNames {
@@ -35,6 +32,9 @@ class Constants {
         const val GET_WORKERS_LIST = "list"
         const val GET_SINGLE_WORKER_INFO = "info"
         const val DELETE_WORKER = "delete"
+        const val ATTENDANCE_BASE = "api/attendance"
+        const val GET_ATTENDANCE = "get"
+        const val UPDATE_ATTENDANCE = "update"
     }
 
 

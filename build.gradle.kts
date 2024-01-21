@@ -21,6 +21,14 @@ application {
     applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
 }
 
+
+
+ktor {
+    fatJar {
+        archiveFileName.set("fat.jar")
+    }
+}
+
 repositories {
     mavenCentral()
 }
@@ -60,7 +68,7 @@ dependencies {
 
 }
 
-tasks.register("startDatabase"){
+tasks.register("startDatabase") {
     doLast {
         val command = arrayOf("docker-compose", "up")
         Runtime.getRuntime().exec(command)

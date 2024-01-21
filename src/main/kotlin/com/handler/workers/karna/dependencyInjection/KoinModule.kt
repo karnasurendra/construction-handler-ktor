@@ -1,18 +1,10 @@
 package com.handler.workers.karna.dependencyInjection
 
-import com.handler.workers.karna.api.UserController
-import com.handler.workers.karna.api.UserControllerImpl
-import com.handler.workers.karna.api.WorkerController
-import com.handler.workers.karna.api.WorkerControllerImpl
-import com.handler.workers.karna.services.UserService
-import com.handler.workers.karna.services.UserServiceImpl
-import com.handler.workers.karna.services.WorkerService
-import com.handler.workers.karna.services.WorkerServiceImpl
-import com.handler.workers.karna.persistance.UserRepository
-import com.handler.workers.karna.persistance.UserRepositoryImpl
-import com.handler.workers.karna.persistance.WorkerRepository
-import com.handler.workers.karna.persistance.WorkerRepositoryImpl
+import com.handler.workers.karna.api.*
+import com.handler.workers.karna.persistance.*
+import com.handler.workers.karna.services.*
 import com.handler.workers.karna.utils.Constants
+import com.handler.workers.karna.validations.AttendanceValidator
 import com.handler.workers.karna.validations.UserDtoValidator
 import com.handler.workers.karna.validations.WorkerDtoValidator
 import io.ktor.server.application.*
@@ -44,6 +36,11 @@ val encryptionServerModule = module {
     single<WorkerRepository> { WorkerRepositoryImpl(get()) }
     single<WorkerService> { WorkerServiceImpl(get(), get()) }
     single<WorkerController> { WorkerControllerImpl(get()) }
+
+    single { AttendanceValidator() }
+    single<AttendanceRepository> { AttendanceRepositoryImpl(get()) }
+    single<AttendanceService> { AttendanceServiceImpl(get(), get()) }
+    single<AttendanceController> { AttendanceControllerImpl(get()) }
 }
 
 fun Application.setUpKoin() {

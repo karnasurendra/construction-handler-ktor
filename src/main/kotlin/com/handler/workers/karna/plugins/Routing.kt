@@ -11,6 +11,7 @@ fun Application.configureRouting() {
     routing {
         configureUserRouting()
         configureWorkerRouting()
+        configureAttendanceRouting()
     }
 }
 
