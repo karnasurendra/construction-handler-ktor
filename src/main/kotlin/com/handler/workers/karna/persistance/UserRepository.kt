@@ -24,10 +24,10 @@ class UserRepositoryImpl(private val database: CoroutineDatabase) : UserReposito
         }
     }
 
-    override suspend fun save(user: User): String? {
+    override suspend fun save(user: User): String? = withContext(Dispatchers.IO) {
         try {
             userCollection.insertOne(user)
-            return user.id
+            user.id
         } catch (e: Exception) {
             throw PersistenceException("Failed to save.")
         }

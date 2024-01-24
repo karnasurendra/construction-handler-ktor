@@ -20,6 +20,10 @@ fun Routing.configureAttendanceRouting() {
             get(Constants.ApiNames.GET_ATTENDANCE) {
                 attendanceController.getAttendance(call)
             }
+
+            delete(Constants.ApiNames.DELETE_ATTENDANCE) {
+                attendanceController.deleteAttendance(call)
+            }
         }
     }
 }

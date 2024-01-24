@@ -35,6 +35,7 @@ class Constants {
         const val ATTENDANCE_BASE = "api/attendance"
         const val GET_ATTENDANCE = "get"
         const val UPDATE_ATTENDANCE = "update"
+        const val DELETE_ATTENDANCE = "delete"
     }
 
 

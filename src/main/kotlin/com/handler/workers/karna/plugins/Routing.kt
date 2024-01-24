@@ -19,7 +19,7 @@ suspend fun handleFailureResponse(call: ApplicationCall, failure: ApiResult.Fail
     val httpStatusCode = when (failure.errorCode) {
         NOT_ACCEPTED_MIME_TYPE,
         DESERIALIZATION_ERROR,
-        MISSING_PARAMETER,INPUT_VALIDATION_FAILED -> HttpStatusCode.BadRequest
+        MISSING_PARAMETER, INPUT_VALIDATION_FAILED, AUTHORIZATION_FAILURE -> HttpStatusCode.BadRequest
 
         else -> HttpStatusCode.InternalServerError
     }

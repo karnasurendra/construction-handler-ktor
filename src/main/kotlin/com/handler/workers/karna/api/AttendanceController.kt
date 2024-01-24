@@ -1,20 +1,26 @@
 package com.handler.workers.karna.api
 
 import com.handler.workers.karna.plugins.CustomPrincipal
+import com.handler.workers.karna.plugins.SuccessResponseModel
 import com.handler.workers.karna.plugins.handleFailureResponse
 import com.handler.workers.karna.services.AttendanceService
 import com.handler.workers.karna.services.GeneralException
 import com.handler.workers.karna.utils.ApiResult
 import com.handler.workers.karna.utils.ErrorCode
+import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.request.*
+import io.ktor.server.response.*
+import kotlinx.serialization.json.*
 
 interface AttendanceController {
 
     suspend fun updateAttendance(call: ApplicationCall)
 
     suspend fun getAttendance(call: ApplicationCall)
+
+    suspend fun deleteAttendance(call: ApplicationCall)
 
 }
 
@@ -32,11 +38,17 @@ class AttendanceControllerImpl(private val attendanceService: AttendanceService)
 
                 when (val result = attendanceService.updateAttendance(userId, attendanceDto)) {
                     is ApiResult.Failure -> {
-
+                        handleFailureResponse(call, result)
                     }
 
                     is ApiResult.Success -> {
-
+                        call.respond(
+                            HttpStatusCode.OK,
+                            SuccessResponseModel(
+                                statusCode = HttpStatusCode.OK.value,
+                                message = result.value
+                            )
+                        )
                     }
                 }
             } else {
@@ -56,21 +68,37 @@ class AttendanceControllerImpl(private val attendanceService: AttendanceService)
 
             if (user?.id != null) {
                 val userId = user.id
-                val workerId = call.parameters["id"] ?: ""
+                val rangeFrom = call.parameters["rangeFrom"]?.toLongOrNull() ?: 0L
+                val rangeTo = call.parameters["rangeTo"]?.toLongOrNull() ?: 0L
 
-                when (val result = attendanceService.getAttendance(userId, workerId)) {
+                when (val result = attendanceService.getAttendance(userId, rangeFrom, rangeTo)) {
                     is ApiResult.Failure -> {
-
+                        handleFailureResponse(call, result)
                     }
 
                     is ApiResult.Success -> {
-
+                        val attendanceList = AttendanceListDto(attendanceList = result.value.toAttendanceDtoList(), 0)
+                        call.respond(
+                            HttpStatusCode.OK, SuccessResponseModel(
+                                statusCode = HttpStatusCode.OK.value,
+                                message = "Attendance list fetched  successfully.",
+                                data = Json.encodeToJsonElement(attendanceList) as JsonObject
+                            )
+                        )
                     }
                 }
             } else {
                 handleFailureResponse(call, ApiResult.Failure(ErrorCode.UNKNOWN_ERROR, "Something went wrong."))
             }
         } catch (e: GeneralException) {
+            handleFailureResponse(call, ApiResult.Failure(ErrorCode.DESERIALIZATION_ERROR, e.localizedMessage))
+        }
+    }
+
+    override suspend fun deleteAttendance(call: ApplicationCall) {
+        try {
+
+        } catch (e: Exception) {
             handleFailureResponse(call, ApiResult.Failure(ErrorCode.DESERIALIZATION_ERROR, e.localizedMessage))
         }
     }
