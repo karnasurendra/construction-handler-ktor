@@ -77,7 +77,7 @@ class AttendanceControllerImpl(private val attendanceService: AttendanceService)
                     }
 
                     is ApiResult.Success -> {
-                        val attendanceList = AttendanceListDto(attendanceList = result.value.toAttendanceDtoList(), 0)
+                        val attendanceList = AttendanceListDto(attendanceList = result.value.toAttendanceDtoList())
                         call.respond(
                             HttpStatusCode.OK, SuccessResponseModel(
                                 statusCode = HttpStatusCode.OK.value,
@@ -97,6 +97,29 @@ class AttendanceControllerImpl(private val attendanceService: AttendanceService)
 
     override suspend fun deleteAttendance(call: ApplicationCall) {
         try {
+            val principal = call.authentication.principal<CustomPrincipal>()
+            val user = principal?.user
+            if (user?.id != null) {
+                val id = call.parameters["id"] ?: ""
+
+                when (val result = attendanceService.deleteAttendance(user.id, id)) {
+                    is ApiResult.Failure -> {
+                        handleFailureResponse(call, result)
+                    }
+
+                    is ApiResult.Success -> {
+                        call.respond(
+                            HttpStatusCode.OK,
+                            SuccessResponseModel(
+                                statusCode = HttpStatusCode.OK.value,
+                                message = "Removed attendance successfully"
+                            )
+                        )
+                    }
+                }
+            } else {
+                handleFailureResponse(call, ApiResult.Failure(ErrorCode.UNKNOWN_ERROR, "Something went wrong."))
+            }
 
         } catch (e: Exception) {
             handleFailureResponse(call, ApiResult.Failure(ErrorCode.DESERIALIZATION_ERROR, e.localizedMessage))

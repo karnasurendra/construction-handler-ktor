@@ -14,9 +14,9 @@ interface AttendanceRepository {
 
     suspend fun addUserToAttendance(attendance: Attendance): Attendance
 
-    suspend fun removeUserFromAttendance(attendance: Attendance)
+    suspend fun removeUserFromAttendance(attendanceId: String)
 
-    suspend fun isWorkerOwnerIsUser(workerId: String, userId: String): Worker?
+    suspend fun isWorkerOwnerIsUser(userId: String): Worker?
 
     suspend fun getAllWorkersInRange(
         userId: String,
@@ -24,6 +24,7 @@ interface AttendanceRepository {
         rangeTo: Long
     ): List<Attendance>
 
+    suspend fun getAttendanceById(attendanceId: String): Attendance?
 
 }
 
@@ -32,7 +33,7 @@ class AttendanceRepositoryImpl(
 ) : AttendanceRepository {
 
     private val attendanceCollection = database.getCollection<Attendance>()
-    private val workersCollection = database.getCollection<Worker>()
+    private val workerCollection = database.getCollection<Worker>()
 
     override suspend fun addUserToAttendance(attendance: Attendance): Attendance = withContext(Dispatchers.IO) {
         try {
@@ -43,12 +44,11 @@ class AttendanceRepositoryImpl(
         }
     }
 
-    override suspend fun removeUserFromAttendance(attendance: Attendance): Unit = withContext(Dispatchers.IO) {
+    override suspend fun removeUserFromAttendance(attendanceId: String): Unit = withContext(Dispatchers.IO) {
         try {
             attendanceCollection.deleteOne(
                 and(
-                    Attendance::workerId eq attendance.workerId,
-                    Attendance::attendedDate eq attendance.attendedDate
+                    Attendance::id eq attendanceId
                 )
             )
         } catch (e: Exception) {
@@ -56,9 +56,9 @@ class AttendanceRepositoryImpl(
         }
     }
 
-    override suspend fun isWorkerOwnerIsUser(workerId: String, userId: String): Worker? = withContext(Dispatchers.IO) {
+    override suspend fun isWorkerOwnerIsUser(userId: String): Worker? = withContext(Dispatchers.IO) {
         try {
-            workersCollection.findOne(Worker::userId eq userId)
+            workerCollection.findOne(Worker::userId eq userId)
         } catch (e: Exception) {
             throw PersistenceException("Failed to find match Worker with User.")
         }
@@ -82,5 +82,13 @@ class AttendanceRepositoryImpl(
                 throw PersistenceException("Failed to fetch attendance list.")
             }
         }
+
+    override suspend fun getAttendanceById(attendanceId: String): Attendance? = withContext(Dispatchers.IO) {
+        try {
+            attendanceCollection.findOne(Attendance::id eq attendanceId)
+        } catch (e: Exception) {
+            throw PersistenceException("Failed to get attendance info.")
+        }
+    }
 
 }

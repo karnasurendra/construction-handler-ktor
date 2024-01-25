@@ -13,7 +13,7 @@ interface AttendanceService {
 
     suspend fun getAttendance(userId: String, rangeFrom: Long, rangeTo: Long): ApiResult<List<Attendance>>
 
-    suspend fun deleteAttendance(userId: String, attendanceDto: AttendanceDto): ApiResult<String>
+    suspend fun deleteAttendance(userId: String, attendanceId: String): ApiResult<String>
 }
 
 class AttendanceServiceImpl(
@@ -29,7 +29,7 @@ class AttendanceServiceImpl(
                 return ApiResult.Failure(ErrorCode.MISSING_PARAMETER, attendanceValidations.joinToString(","))
             } else {
 
-                val worker = attendanceRepository.isWorkerOwnerIsUser(attendanceDto.workerId, userId)
+                val worker = attendanceRepository.isWorkerOwnerIsUser(userId)
 
                 if (worker == null) {
                     return ApiResult.Failure(
@@ -37,7 +37,7 @@ class AttendanceServiceImpl(
                         "No permission to update this worker info."
                     )
                 } else {
-                    attendanceRepository.addUserToAttendance(attendanceDto.fromDto())
+                    attendanceRepository.addUserToAttendance(attendanceDto.fromDto(userId))
                     return ApiResult.Success("Attendance updated successfully.")
                 }
 
@@ -50,6 +50,9 @@ class AttendanceServiceImpl(
 
     override suspend fun getAttendance(userId: String, rangeFrom: Long, rangeTo: Long): ApiResult<List<Attendance>> {
         try {
+            if (rangeFrom == 0L || rangeTo == 0L) {
+                throw GeneralException(ErrorCode.MISSING_PARAMETER, "Range is required.")
+            }
             val list = attendanceRepository.getAllWorkersInRange(userId, rangeFrom, rangeTo)
             return ApiResult.Success(list)
         } catch (e: GeneralException) {
@@ -57,26 +60,28 @@ class AttendanceServiceImpl(
         }
     }
 
-    override suspend fun deleteAttendance(userId: String, attendanceDto: AttendanceDto): ApiResult<String> {
+    override suspend fun deleteAttendance(userId: String, attendanceId: String): ApiResult<String> {
         try {
-            val attendanceValidations = attendanceValidator.validateAttendanceDto(attendanceDto)
-
-            if (attendanceValidations.isNotEmpty()) {
-                return ApiResult.Failure(ErrorCode.MISSING_PARAMETER, attendanceValidations.joinToString(","))
+            if (attendanceId.isEmpty()) {
+                return ApiResult.Failure(ErrorCode.MISSING_PARAMETER, "Invalid attendance id.")
             } else {
-
-                val worker = attendanceRepository.isWorkerOwnerIsUser(attendanceDto.workerId, userId)
-
-                if (worker == null) {
+                val attendance = attendanceRepository.getAttendanceById(attendanceId)
+                if (attendance == null) {
                     return ApiResult.Failure(
-                        ErrorCode.AUTHORIZATION_FAILURE,
-                        "No permission to update this worker info."
+                        ErrorCode.ATTENDANCE_NOT_FOUND,
+                        "Attendance not found with id $attendanceId"
                     )
                 } else {
-                    attendanceRepository.removeUserFromAttendance(attendanceDto.fromDto())
-                    return ApiResult.Success("Attendance updated successfully.")
+                    if (attendance.userId == userId) {
+                        attendanceRepository.removeUserFromAttendance(attendanceId)
+                        return ApiResult.Success("Attendance deleted successfully")
+                    } else {
+                        return ApiResult.Failure(
+                            ErrorCode.AUTHORIZATION_FAILURE,
+                            "No permission to update this worker info."
+                        )
+                    }
                 }
-
             }
         } catch (e: GeneralException) {
             return ApiResult.Failure(e.errorCode, e.localizedMessage)

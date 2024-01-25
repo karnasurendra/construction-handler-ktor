@@ -8,8 +8,12 @@ class AttendanceValidator {
 
         val errorsList = mutableListOf<String>()
 
+        if (attendanceDto.workerName.isEmpty()) {
+            errorsList.add("Invalid worker name")
+        }
+
         if (attendanceDto.workerId.isEmpty()) {
-            errorsList.add("Invalid Worker Id")
+            errorsList.add("Invalid worker id")
         }
 
         if (attendanceDto.attendedDate == 0L) {

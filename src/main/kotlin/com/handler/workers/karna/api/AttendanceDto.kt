@@ -7,15 +7,14 @@ import kotlinx.serialization.Serializable
 data class AttendanceDto(
     val workerName: String = String(),
     val workerId: String = String(),
-    val userId: String = String(),
     val attendedDate: Long
 )
 
-fun AttendanceDto.fromDto(): Attendance {
+fun AttendanceDto.fromDto(userId: String): Attendance {
     return Attendance(
         workerName = this.workerName,
         workerId = this.workerId,
-        userId = this.userId,
+        userId = userId,
         attendedDate = this.attendedDate
     )
 }
@@ -31,7 +30,7 @@ data class AttendanceOverViewDto(
 
 fun Attendance.toDto(): AttendanceOverViewDto {
     return AttendanceOverViewDto(
-        id = this.id,
+        id = this.id ?: "",
         workerId = this.workerId,
         workerName = this.workerName,
         attendedDate = this.attendedDate
