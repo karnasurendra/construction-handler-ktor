@@ -5,10 +5,16 @@ import io.ktor.server.application.*
 
 object ApplicationConfiguration {
     lateinit var securityConfig: SecurityConfig
+    lateinit var ssl: Ssl
     lateinit var jwtConfig: JwtConfig
+    var isDevelopment: Boolean = true
 }
 
 fun Application.setupApplicationConfiguration() {
+
+    ApplicationConfiguration.isDevelopment =
+        environment.config.propertyOrNull("ktor.development")?.getString()?.toBoolean() ?: false
+
 
     // Security
     val securityObject = environment.config.config("ktor.security")
@@ -33,6 +39,15 @@ fun Application.setupApplicationConfiguration() {
     val jwtSecret = jwtObject.property("jwtSecret").getString()
     val issuer = jwtObject.property("issuer").getString()
     ApplicationConfiguration.jwtConfig = JwtConfig(jwtSecret, issuer)
+
+    //SSL
+    val ssl = environment.config.config("ktor.ssl")
+    val port = ssl.property("port").getString().toInt()
+    val keyStorePath = ssl.property("keyStorePath").getString()
+    val keyAlias = ssl.property("keyAlias").getString()
+    val keyStorePassword = ssl.property("keyStorePassword").getString()
+    val privateKeyPassword = ssl.property("privateKeyPassword").getString()
+    ApplicationConfiguration.ssl = Ssl(port, keyStorePath, keyAlias, keyStorePassword, privateKeyPassword)
 }
 
 data class SecurityConfig(
@@ -47,4 +62,12 @@ data class SecurityConfig(
 data class JwtConfig(
     val jwtSecret: String,
     val issuer: String
+)
+
+data class Ssl(
+    val port: Int,
+    val keystorePath: String,
+    val keyAlias: String,
+    val keyStorePassword: String,
+    val privateKeyPassword: String
 )

@@ -65,6 +65,9 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
 
+    // SSL
+    implementation("io.ktor:ktor-network-tls-certificates:$ktorVersion")
+
 
 }
 

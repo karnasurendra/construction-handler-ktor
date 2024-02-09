@@ -11,6 +11,9 @@ import io.ktor.server.auth.jwt.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
 import org.koin.ktor.ext.inject
+import java.io.File
+import java.io.InputStream
+import java.security.KeyStore
 
 fun Application.configureSecurity() {
 
@@ -54,8 +57,6 @@ fun Application.configureSecurity() {
             }
         }
     }
-
-
 }
 
 data class CustomPrincipal(val user: User) : Principal
